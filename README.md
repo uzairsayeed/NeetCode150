@@ -101,6 +101,21 @@ Every problem follows the **1-7-30 Revision Rule**.
 
 ---
 
+## 📊 Revision Tracker
+
+A detailed tracker is maintained for every problem including:
+
+- Pattern
+- Recognition Trigger
+- Brute Force
+- Optimization
+- Mistakes Made
+- Confidence Score
+- Day 1 / Day 7 / Day 30 revisions
+
+📄 Full tracker available in:
+Revision_Tracker/DSA_Tracker.xlsx
+
 ## 📝 Problem Notes Template
 
 For every problem, I maintain:
