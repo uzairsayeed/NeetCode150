@@ -119,7 +119,7 @@ class Solution:
         return list(res.values())
     
 
-    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+    def groupAnagrams6(self, strs: List[str]) -> List[List[str]]:
         res = defaultdict(list)
 
         for string in strs:
@@ -130,6 +130,29 @@ class Solution:
             res[tuple(curr)].append(string)
 
         return list(res.values())
+    
+
+    # Day-7: 24/June/2026
+    # Pattern: Cannonical Pattern -> Map of Maps/26-char map
+    # Recognition Trigger: Check for the char freqs and compare them. 
+    # Brute Force: Two loops. O(n2)
+    # Optimization Insight: Can use a Counter/Map of Maps
+    # Note: Missed while inserting list into the map insert it as tuple
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        char_arr_map = defaultdict(list)
+
+        for s in strs:
+            curr_char_arr = [0] * 26
+            for char in s:
+                curr_char_arr[ord(char) - ord('a')] += 1
+    
+            # print('curr_char_arr --> ', curr_char_arr)
+
+            char_arr_map[tuple(curr_char_arr)].append(s)
+
+        # print('char_arr_map --> ', char_arr_map)
+
+        return list(char_arr_map.values())
 
 o = Solution()
 strs = ["eat","tea","tan","ate","nat","bat"]
