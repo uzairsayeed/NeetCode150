@@ -74,7 +74,7 @@ class Solution:
         # ==> curr_ele can be said to be the starting element of the sequence iff (curr_ele - 1) doesnt exist in the set
         # ==> Once the starting element is identified we can walk down the sequence by incrementing the (curr_ele + 1) and checking its exisstence in set
         # TC = O(n)
-        def longestConsecutive(self, nums: List[int]) -> int:
+        def longestConsecutive2(self, nums: List[int]) -> int:
             res = 0
             nums_set = set(nums)
 
@@ -93,6 +93,29 @@ class Solution:
             return res
 
 
+        # Day-7 : 24/June/2026
+        # Pattern: Set
+        # Trigger : For any element ot be the start of the seq, (ele-1) should not exists
+        # Note: Was able to solve
+        def longestConsecutive(self, nums: List[int]) -> int:
+            if len(nums) == 0:
+                return 0
+            nums_set = set(nums)
+            res = 1
+
+            for num in nums_set:
+                if num-1 not in nums_set:
+                    curr_seq = 1
+                    next_num = num+1
+
+                    while next_num in nums_set:
+                        curr_seq += 1
+                        next_num += 1
+
+                    res = max(res, curr_seq)
+
+            return res
+        
     o = Solution()
     # nums = [100,4,200,1,3,2]
     # nums = [0,3,7,2,5,8,4,6,0,1]
