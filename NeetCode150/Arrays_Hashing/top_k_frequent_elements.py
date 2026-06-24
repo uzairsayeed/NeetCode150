@@ -80,7 +80,7 @@ class Solution:
     # Recognition Trigger: Freq range is bounded by the size of input array
     # Brute Force: Two loops. O(n2)
     # Optimization Insight: Create a freq array of size len(nums)
-    def topKFrequent(self, nums: List[str], k : int) -> List[int]:
+    def topKFrequent3(self, nums: List[str], k : int) -> List[int]:
         res = []
         freq_arr = [[] for idx in range(len(nums)+1)]
         freq_map = Counter(nums)
@@ -97,6 +97,29 @@ class Solution:
             else:
                 return res
 
+    # Day-7: 24/June/2026
+    # Pattern: Bucket Sort
+    # Note: Was able to solve
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        res = []
+        nums_freq = Counter(nums)
+
+        bucket_freq_arr = [[] for i in range(len(nums)+1)]
+
+        for num, freq in nums_freq.items():
+            bucket_freq_arr[freq].append(num)
+
+        # print('bucket_freq_arr --> ', bucket_freq_arr)
+   
+        for idx1 in range(len(bucket_freq_arr)-1, -1, -1):
+            for idx2 in range(len(bucket_freq_arr[idx1])):
+                if k:
+                    res.append(bucket_freq_arr[idx1][idx2])
+                    k -=1
+                else:
+                    return res
+                    
+        return res
 
 
 o = Solution()
