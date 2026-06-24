@@ -1,4 +1,5 @@
-# You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+# You are given an integer array height of length n. 
+# There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
 
 # Find two lines that together with the x-axis form a container, such that the container contains the most water.
 
@@ -44,7 +45,7 @@ class Solution:
         return res
     
     
-    def maxArea(self, height: list[int]) -> int:
+    def maxArea2(self, height: list[int]) -> int:
         res = 0
         left_ptr, right_ptr = 0, len(height)-1
 
@@ -59,6 +60,26 @@ class Solution:
             else:
                 right_ptr -= 1
     
+        return res
+    
+    # Day-1: 24/June/2026
+    # Pattern: Two POinter
+    # Trigger: By keeping left, right = 0, len(height)-1, weve already maximised the width
+    # Inorder to max height the side with shorter height needs to be moved
+    # Notes: was able to solve the problem.
+    def maxArea(self, height: List[int]) -> int:
+        res = 0
+        left_ptr, right_ptr = 0, len(height)-1
+
+        while left_ptr < right_ptr:
+            curr_area = min(height[left_ptr], height[right_ptr]) * (right_ptr-left_ptr)
+            res = max(res, curr_area)
+
+            if height[left_ptr] <= height[right_ptr]:
+                left_ptr += 1
+            else:
+                right_ptr -= 1
+
         return res
 
     
