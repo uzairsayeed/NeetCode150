@@ -147,7 +147,7 @@ class Solution:
                 res[idx] = prefix_prdt[idx-1] * postfix_prdt[idx+1]
         return res
 
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
+    def productExceptSelf5(self, nums: List[int]) -> List[int]:
         res = [1]*len(nums)
         prefix_prdt = 1
         postfix_prdt = 1
@@ -160,6 +160,29 @@ class Solution:
             res[idx] = postfix_prdt * res[idx]
             postfix_prdt = postfix_prdt * nums[idx]
         return res
+    
+    # Day-7: 24/June/2026
+    # Pattern: prefix/suffix arrays
+    # Recognition Trigger: Prd except itself
+    # Note: Was able to solve it. Core logic res of each ele is the prd of left values and right values
+    def productExceptSelf(self, nums: list[int]) -> list[int]:
+        res = [1]*len(nums)
+        left_prd, right_prd = 1, 1
+
+        # Calculate left prd
+        for idx in range(1, len(nums)):
+            res[idx] = left_prd * nums[idx-1]
+            left_prd *= nums[idx-1]
+            
+        # print('res --> ', res)
+        
+        # Calculate right prd
+        for idx in range(len(nums)-1, -1, -1):
+            res[idx] = right_prd * res[idx]
+            right_prd *= nums[idx]
+
+        return res
+
 o = Solution()
 nums = [-1,1,0,-3,3]
 # nums = [1,2,3,4]
