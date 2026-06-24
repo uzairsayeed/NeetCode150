@@ -1,4 +1,5 @@
-# Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+# Given n non-negative integers representing an elevation map where the width of each bar is 1, 
+# compute how much water it can trap after raining.
 
 # Example 1:
 
@@ -17,6 +18,7 @@
 # n == height.length
 # 1 <= n <= 2 * 104
 # 0 <= height[i] <= 105
+
 
 class Solution:
     # BF:
@@ -52,7 +54,7 @@ class Solution:
 
     # Do we really need maxima for every index?
     # Or can we process indices as we move inward?
-    def trap(self, height: List[int]) -> int:
+    def trap2(self, height: List[int]) -> int:
         res = 0
         left_ptr, right_ptr = 0, len(height)-1
         left_max, right_max = height[0], height[len(height)-1]
@@ -76,6 +78,34 @@ class Solution:
         return res
 
 
+    # Day-1: 24/June/2026
+    # Pattern: Two pointer -> maintain local maxima 
+    # Trigger: For every position we need to find max height to its left and right
+    # Instead of maintaining seperate arrays of left andf right max heights
+    # We can maintain local maximas
+    # For every postion , only the side with min maximum height(either leftg/right) matters
+    # The other side doesnt matter
+    def trap(self, height: List[int]) -> int:
+        res = 0
+        left_ptr, right_ptr = 0, len(height)-1
+        left_max, right_max = height[0], height[len(height)-1]
+
+        while left_ptr < right_ptr:
+            if height[left_ptr] <= height[right_ptr]:
+                if height[left_ptr] >= left_max:
+                    left_max = height[left_ptr]
+                else:
+                    res += left_max - height[left_ptr]
+                left_ptr+= 1
+            else:
+                if height[right_ptr] >= right_max:
+                    right_max = height[right_ptr]
+                else:
+                    res += right_max - height[right_ptr]
+                right_ptr -= 1
+
+        return res
+    
 o = Solution()
 # height = [4,2,0,3,2,5]
 height = [0,1,0,2,1,0,1,3,2,1,2,1]
