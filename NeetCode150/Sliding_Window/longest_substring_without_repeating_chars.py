@@ -1,0 +1,100 @@
+# Given a string s, find the length of the longest substring without duplicate characters.
+
+ 
+
+# Example 1:
+
+# Input: s = "abcabcbb"
+# Output: 3
+# Explanation: The answer is "abc", with the length of 3. Note that "bca" and "cab" are also correct answers.
+# Example 2:
+
+# Input: s = "bbbbb"
+# Output: 1
+# Explanation: The answer is "b", with the length of 1.
+# Example 3:
+
+# Input: s = "pwwkew"
+# Output: 3
+# Explanation: The answer is "wke", with the length of 3.
+# Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+ 
+
+# Constraints:
+
+# 0 <= s.length <= 5 * 104
+# s consists of English letters, digits, symbols and spaces.
+
+
+class Solution:
+    # Approach 1: This approach passed on leetcode but its not the optimal sliding window solution.
+    def lengthOfLongestSubstring1(self, s: str) -> int:
+        # print('len --> ', len(s))
+        if len(s) == 0 or len(s) == 1:
+            return len(s)
+        max_len = 0
+        substring_set = set()
+        start, end = 0, 1
+        substring_set.add(s[start])
+
+        while end < len(s):
+            # print('start, end --> ', start, end)
+            # print('substring_set-1 --> ', substring_set)
+
+            if s[end] not in substring_set:
+                substring_set.add(s[end])
+                end += 1
+            else:
+                # print('substring_set-2 --> ', substring_set)
+
+                max_len = max(max_len, len(substring_set))
+                start += 1
+                substring_set.clear()
+                substring_set.add(s[start])
+                end = start + 1
+        # print('substring_set-3 --> ', substring_set)
+        if len(substring_set):
+            max_len = max(max_len, len(substring_set))
+        return max_len
+    
+
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if len(s) == 0:
+            return 0
+        max_len = 0
+        window_set = set()
+        window_set.add(s[0])
+
+        start, end = 0, 1
+
+        while end < len(s):
+            if s[end] not in window_set:
+                window_set.add(s[end])
+                end += 1
+
+            else:
+                while s[end] in window_set:
+                    max_len = max(max_len, len(window_set))
+                    window_set.remove(s[start])
+                    start += 1
+
+                window_set.add(s[end])
+                max_len = max(max_len, len(window_set))
+                end += 1
+
+        if len(window_set):
+            max_len = max(max_len, len(window_set))
+        return max_len
+
+    
+
+o = Solution()
+s = "abcabcbb"
+# s = "bbbbb"
+# s = "pwwkew"
+# s = ''
+# s = " "
+# s = 'au'
+# s = 'dvdf'
+print(o.lengthOfLongestSubstring(s))
+            
