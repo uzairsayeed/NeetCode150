@@ -28,6 +28,11 @@
 
 class Solution:
     # Approach 1: This approach passed on leetcode but its not the optimal sliding window solution.
+    # Hrfe we are clearing the set on every trigger which is not optimal
+    # Instead of clearing the set , we should re-use the already processed elements
+    # Pattern: Set + Sliding Window
+    # Recognition Trigger: Inorder to calculate the longest substring without repeating chars, the sliding window must be maintained
+    # TC = O(n)
     def lengthOfLongestSubstring1(self, s: str) -> int:
         # print('len --> ', len(s))
         if len(s) == 0 or len(s) == 1:
@@ -58,7 +63,7 @@ class Solution:
         return max_len
     
 
-    def lengthOfLongestSubstring(self, s: str) -> int:
+    def lengthOfLongestSubstring2(self, s: str) -> int:
         if len(s) == 0:
             return 0
         max_len = 0
@@ -86,7 +91,52 @@ class Solution:
             max_len = max(max_len, len(window_set))
         return max_len
 
+
+    def lengthOfLongestSubstring3(self, s: str) -> int:
+        window_set = set()
+        start = 0
+        max_len = 0
+
+        for end in range(len(s)):
+
+            # 1. Expand Window
+            while s[end] in window_set:
+
+                # 2. Fix Window
+                window_set.remove(s[start])
+                start += 1
+
+            window_set.add(s[end])
+
+            # 3. Update Answer
+            max_len = max(max_len, end - start + 1)
+
+        return max_len
     
+    # Day-1: 26/June/2026
+    # Pattern : Sliding Window
+    # Core Insight:
+    # Fix the window => If we encounter a duplicate , fix the window -> make it valid by removing the duplicate and update the start ptr
+    # Expand the window => By addind the incoming element which actually was the cause of FIX
+    # Update the answer 
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        window_set = set()
+        start = 0
+        max_len = 0
+
+        for end in range(len(s)):
+            # Fix the window
+            while s[end] in window_set:
+                window_set.remove(s[start])
+                start += 1
+
+            # Expand the window
+            window_set.add(s[end])
+
+            # Update the answer
+            max_len = max(max_len, end-start+1)
+
+        return max_len
 
 o = Solution()
 s = "abcabcbb"
