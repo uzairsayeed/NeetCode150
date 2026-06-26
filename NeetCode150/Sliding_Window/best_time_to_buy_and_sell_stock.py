@@ -101,7 +101,7 @@ class Solution:
     # - Compute profit if sold today.
     # - Update global maximum profit.
     # - Update running minimum.
-    def maxProfit(self, prices: List[int]) -> int:
+    def maxProfit4(self, prices: List[int]) -> int:
         min_price = prices[0]
         max_profit = 0
 
@@ -114,6 +114,40 @@ class Solution:
 
         return max_profit
 
+    # Day-1: 26-Jun-2026
+
+    # Pattern:
+    # Running Minimum (Prefix Minimum)
+
+    # Recognition Trigger:
+    # Need to maximize (prices[j] - prices[i]) where j > i.
+
+    # Core Insight:
+    # Treat every current day as the selling day.
+    # To maximize profit, the buying day should be the minimum stock price seen before today.
+
+    # Maintain:
+    # 1. min_price_so_far
+    # 2. max_profit_so_far
+
+    # Invariant:
+    # Before processing each day,
+    # min_price stores the minimum stock price seen so far.
+
+    # Algorithm:
+    # 1. Calculate profit if sold today.
+    # 2. Update global maximum profit.
+    # 3. Update minimum stock price.
+
+    # TC: O(n)
+    # SC: O(1)
+    def maxProfit(self, prices: list[int]) -> int:
+        min_price = prices[0]
+        max_profit = 0
+        for price in prices[1:]:
+            max_profit = max(max_profit, price-min_price)
+            min_price = min(min_price, price)
+        return max_profit
 o = Solution()
 prices = [7,6,4,3,1]
 # prices = [7,1,5,3,6,4] 
