@@ -20,6 +20,13 @@
 # 1 <= s1.length, s2.length <= 104
 # s1 and s2 consist of lowercase English letters.
 
+
+
+
+# | Window Type   | Template                                                |
+# | ------------- | ------------------------------------------------------- |
+# | Variable Size | Expand → While Invalid: Shrink → Update                 |
+# | Fixed Size    | Expand → If Window Size == K: Update (if valid) → Slide |
 from collections import Counter
 class Solution:
     # Pattern: Sliding Window
@@ -72,7 +79,7 @@ class Solution:
 
     # TC = O(n)
     # SC = O(1) 
-    def checkInclusion(self, s1: str, s2: str) -> bool:
+    def checkInclusion2(self, s1: str, s2: str) -> bool:
         c1, c2 = Counter(s1), Counter()
         start = 0
 
@@ -91,7 +98,29 @@ class Solution:
                     start += 1
         return False
 
+    # Day-1: 
+    # Notes: Initially i missed that it is a FIXED SLIDING WINDOW type of problem.
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        c1, c2 = Counter(s1), Counter()
+        start = 0
 
+        for end in range(len(s2)):
+            # EXPAND
+            c2[s2[end]] += 1
+
+            # FIX:
+            # Check for the size
+            if end-start+1 == len(s1):
+                if c1 == c2:
+                    return True
+                
+                else:
+                    c2[s2[start]] -= 1
+                    if c2[s2[start]] == 0:
+                        del c2[s2[start]]
+
+                    start += 1
+        return False
 o = Solution()
 s1 = "ab"
 s2 = "eidbaooo"
