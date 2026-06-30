@@ -216,6 +216,50 @@ class Solution:
                 start += 1
 
         return res
+    
+    # Day-1: 30/June/2026
+    # Notes: Window here is nof variable size. 
+    # Mistakes made:
+    # 1. At first, I was SHRINKING the window then updating the answer. Didnt needed any help here
+    # 2. After fixing that, I was using IF condition for checking the VALID window condition, actually it needed to be a WHILE condition.
+    def solve(self, s: str, t: str) -> str:
+        window, ctr = Counter(), Counter(t)
+        start = 0
+        min_len = float('inf')
+        res = ''
+
+        for end in range(len(s)):
+            print('start, end, s[end] --> ', start, end, s[end])
+            # EXPAND
+            window[s[end]] += 1
+
+            print('window, ctr-1 --> ', window, ctr)
+
+
+
+            while not (ctr-window):
+                print('window, ctr-2 --> ', window, ctr)
+                print('min_len, end-start+1-1 --> ', min_len, end-start+1)
+
+                if min_len > end-start+1:
+                    min_len = end-start+1
+                    res = s[start:end+1]
+                    print('min_len, res-1 --> ', min_len, res)
+
+                window[s[start]] -= 1
+                if window[s[start]] == 0:
+                    del window[s[start]]
+                start += 1
+
+            # FIX
+            while start < len(s) and s[start] not in ctr:
+                window[s[start]] -= 1
+                if window[s[start]] == 0:
+                    del window[s[start]]
+                start += 1
+            print('start, end, s[end]-1 --> ', start, end, s[end])
+
+        return res
 
 
 
