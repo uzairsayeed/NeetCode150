@@ -288,7 +288,7 @@ class Solution:
                 if c1[s[start]] == 0:
                     del c1[s[start]]
 
-                if s[start] in c2 and c1[s[start]] != c2[s[start]]:
+                if s[start] in c2 and c1[s[start]] < c2[s[start]]:
                     have -= 1
                 start += 1
                 
