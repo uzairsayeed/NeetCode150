@@ -261,6 +261,38 @@ class Solution:
 
         return res
 
+    def solve(self, s: str, t: str) -> str:
+        c1, c2 = Counter(), Counter(t)
+        start = 0
+        min_len = float('inf')
+        res = ''
+        have, need = 0, len(c2)
+
+        for end in range(len(s)):
+            # EXPAND
+            c1[s[end]] += 1
+
+            if s[end] in c1 and c2[s[end]] == c1[s[end]]:
+                have += 1
+            # FIX:
+            # INVARIANT: Current window contains every character of t.
+            # As long as that's true => keep shrinking. => The moment it becomes false, => expand again. 
+            while have == need:
+                # UPDATE
+                if min_len > end-start+1:
+                    min_len = end-start+1
+                    res = s[start:end+1]
+
+                #SHRINK:
+                c1[s[start]] -= 1
+                if c1[s[start]] == 0:
+                    del c1[s[start]]
+
+                if s[start] in c2 and c1[s[start]] != c2[s[start]]:
+                    have -= 1
+                start += 1
+                
+        return res
 
 
 o = Solution()
