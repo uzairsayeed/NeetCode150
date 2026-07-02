@@ -80,8 +80,37 @@ class Solution:
 
         return res
 
+# Day-1: 02/July/2026
+# Notes: was able to crack thje solution , with some minor issues
+class Solution:
+    def solve(self, nums, k):
+        window = deque()
+        res = []
+        start = 0
+
+        for end in range(len(nums)):
+            # EXPAND
+            while len(window) and nums[window[-1]] <= nums[end]:
+                window.pop()
+
+            window.append(end)
+
+            # Here, we are checking the case where our current window (start -> end) whether it is insync with our deque
+            # For example: 
+            # window = [1,2,3]
+            # start = 2
+            # Which means the top of deque(window) can no longer be our answer so we need to make sure our start and window are in sync
+            while window and window[0] < start:
+                window.popleft()
+
+            if end-start+1 == k:
+                res.append(nums[window[0]])
+                start += 1
+
+        return res
+    
 o = Solution()
-nums = [1,3,-1,-3,5,3,6,7]
+nums = [3,1,1,3]
 k = 3
 
 # nums = [1]
