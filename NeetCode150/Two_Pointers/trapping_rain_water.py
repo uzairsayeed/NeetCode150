@@ -106,7 +106,7 @@ class Solution:
 
         return res
     
-    # Day-30: 03/July/2026
+    # Day-7: 03/July/2026
     # Notes: I was able to get the intuition (for each idx get left_max and right_max => computer left_max_hts and right_max_hts) right away.
     # Was able to solve with this apporach in 1 go
     def solve(self, height: List[int]) -> int:
@@ -133,7 +133,7 @@ class Solution:
 
         return res
     
-    # Day-30: 03/July/2026
+    # Day-7: 03/July/2026
     # Notes: I was able to build the intuition that min(max_left_height, max_right_height) for each idx matters as its the side that is going to contribute to the total water contained.
     # But totally missed the TWO POINTER logic.
     def solve(self, height: List[int]) -> int:
