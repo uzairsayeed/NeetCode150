@@ -132,6 +132,35 @@ class Solution:
                 res += water
 
         return res
+    
+    # Day-30: 03/July/2026
+    # Notes: I was able to build the intuition that min(max_left_height, max_right_height) for each idx matters as its the side that is going to contribute to the total water contained.
+    # But totally missed the TWO POINTER logic.
+    def solve(self, height: List[int]) -> int:
+        res = 0
+        left_max, right_max = height[0], height[len(height)-1]
+        left_ptr, right_ptr = 0, len(height)-1
+
+        while left_ptr < right_ptr:
+            # BAsed on this condition, we will move our ptrs
+            if height[left_ptr] <= height[right_ptr]:
+                # This condition re-evaluates the running left_max
+                # and if this condition is true then it is not going to contribute to the total water contained
+                if height[left_ptr] >= left_max:
+                    left_max = height[left_ptr]
+                else:
+                    res += left_max - height[left_ptr]
+
+                left_ptr += 1
+            else:
+                if height[right_ptr] >= right_max:
+                    right_max = height[right_ptr]
+                else:
+                    res += right_max - height[right_ptr]
+
+                right_ptr -= 1
+                                
+        return res
 o = Solution()
 # height = [4,2,0,3,2,5]
 height = [0,1,0,2,1,0,1,3,2,1,2,1]
