@@ -106,6 +106,32 @@ class Solution:
 
         return res
     
+    # Day-30: 03/July/2026
+    # Notes: I was able to get the intuition (for each idx get left_max and right_max => computer left_max_hts and right_max_hts) right away.
+    # Was able to solve with this apporach in 1 go
+    def solve(self, height: List[int]) -> int:
+        res = 0
+        left_max_hts = [0] * len(height)
+        right_max_hts = [0] * len(height)
+        left_max, right_max = height[0], height[len(height)-1]
+
+        # Compute left max hts for each idx
+        for idx in range(1, len(height)):
+            left_max_hts[idx] = max(left_max, height[idx-1])
+            left_max = max(left_max, height[idx])
+
+        # Compute right max hts for each idx
+        for idx in range(len(height)-2, -1, -1):
+            right_max_hts[idx] = max(right_max, height[idx+1])
+            right_max = max(right_max, height[idx])
+
+        # Calculate water contained by each bar
+        for idx in range(len(height)):
+            water = min(left_max_hts[idx], right_max_hts[idx]) - height[idx]
+            if water > 0:
+                res += water
+
+        return res
 o = Solution()
 # height = [4,2,0,3,2,5]
 height = [0,1,0,2,1,0,1,3,2,1,2,1]
