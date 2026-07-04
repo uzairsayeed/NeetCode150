@@ -24,6 +24,10 @@
 # 1 <= prices.length <= 105
 # 0 <= prices[i] <= 104
 
+# | Window Type   | Template                                                |
+# | ------------- | ------------------------------------------------------- |
+# | Variable Size | Expand → While Invalid: Shrink → Update                 |
+# | Fixed Size    | Expand → If Window Size == K: Update (if valid) → Slide |
 
 class Solution:
     # BF: For every price find the max profit and calculate overall profit
@@ -148,6 +152,22 @@ class Solution:
             max_profit = max(max_profit, price-min_price)
             min_price = min(min_price, price)
         return max_profit
+    
+
+    # Day-07: 03/July/2026
+    # Notes: I was able to figure out the intuition => (For current 'i' cosnider it as the selling day and minus the min price seen so far[left_min])
+    # Did 2 mistakes though
+    # 1. Was calculating 'min_price_seen' first then 'curr_profit' => It should be the other way, since we want to minis the min price seen so far not including the curr price
+    # 2. USed 'min(min_price_seen, prices[idx-1])' => the correct is to include the current price inorder to calculate the next min price seen so far.
+    def solve(self, prices: list[int]) -> int:
+        res = 0
+        min_price_seen = prices[0]
+
+        for idx in range(1,len(prices)):
+            curr_profit = prices[idx] - min_price_seen
+            min_price_seen = min(min_price_seen, prices[idx])
+            res = max(res, curr_profit)
+        return res
 o = Solution()
 prices = [7,6,4,3,1]
 # prices = [7,1,5,3,6,4] 
