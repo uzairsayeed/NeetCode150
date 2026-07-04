@@ -82,7 +82,21 @@ class Solution:
 
         return res
 
-    
+    # Day-07: 03/July/2026
+    # Notes: I was able to crack the intuition in first go and solved it .
+    # Mistakes Made: While calculating width, inititally i did (right_ptr-left_ptr+1)
+    def solve(self, height: list[int]) -> int:
+        res = 0
+        left_ptr, right_ptr = 0, len(height)-1
+
+        while left_ptr < right_ptr:
+            if height[left_ptr] <= height[right_ptr]:
+                res = max(res, height[left_ptr] * (right_ptr-left_ptr))
+                left_ptr += 1
+            else:
+                res = max(res, height[right_ptr] * (right_ptr-left_ptr))
+                right_ptr -= 1
+        return res
 
 o = Solution()
 # height = [1,8,6,2,5,4,8,3,7]
