@@ -26,6 +26,11 @@
 # s consists of English letters, digits, symbols and spaces.
 
 
+
+# | Window Type   | Template                                                |
+# | ------------- | ------------------------------------------------------- |
+# | Variable Size | Expand → While Invalid: Shrink → Update                 |
+# | Fixed Size    | Expand → If Window Size == K: Update (if valid) → Slide |
 class Solution:
     # Approach 1: This approach passed on leetcode but its not the optimal sliding window solution.
     # Hrfe we are clearing the set on every trigger which is not optimal
@@ -119,7 +124,7 @@ class Solution:
     # Fix the window => If we encounter a duplicate , fix the window -> make it valid by removing the duplicate and update the start ptr
     # Expand the window => By addind the incoming element which actually was the cause of FIX
     # Update the answer 
-    def lengthOfLongestSubstring(self, s: str) -> int:
+    def lengthOfLongestSubstring4(self, s: str) -> int:
         window_set = set()
         start = 0
         max_len = 0
@@ -138,6 +143,66 @@ class Solution:
 
         return max_len
 
+    # IMPORTANT:
+    # We update max_len only AFTER the Fix step because only VALID windows
+    # are candidates for the answer.
+    #
+    # During the Fix step, the window contains duplicate characters,
+    # so any window size observed at that point is invalid and cannot
+    # contribute to the answer.
+    #
+    # Once the duplicate is completely removed, the window invariant
+    # is restored:
+    #     "All characters in the window are unique."
+    #
+    # We then expand the window by adding the current character and
+    # update the answer using the size of this valid window.
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        window = set()
+        start = 0
+        max_len = 0
+
+        for end in range(len(s)):           
+            # FIX STEP
+            # Invariant => Curr element is already present in window making it invalid
+            while s[end] in window:
+                window.remove(s[start])
+                # SHRINK the window
+                start += 1
+
+            # EXPAND
+            window.add(s[end])
+            # UPDATE
+            max_len = max(max_len, end-start+1)
+
+
+        return max_len
+    
+    # Day-07: 03/July/2026
+    # Notes: I was able to crack thje intuition, found the valid and invalid window state 
+    # Mistakes Made:
+    # 1. Same mistake as Day-1, during the FIX step when we encountered curr_ele to be duplicate I was immediately calculating 'res'
+    # The reason why it shouldnt be calculated is, as we are currently processing s[end] and it turns out to be alrady present in window 
+    # It makes the window invalid.
+    # Hence , first FIX the window , then INSERT the curr_ele into the window and then calculate res
+    def solve(self, s: str) -> int:
+        res = 0
+        start = 0
+        window = set()
+
+        for end in range(len(s)):
+            # FIX
+            # Invariant => Current ele is part of the window already
+            while s[end] in window:
+                window.remove(s[start])
+                start += 1
+
+            window.add(s[end])
+
+            res = max(res, end-start+1)
+
+
+        return res
 o = Solution()
 s = "abcabcbb"
 # s = "bbbbb"
