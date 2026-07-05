@@ -26,6 +26,10 @@
 # s consists of only uppercase English letters.
 # 0 <= k <= s.length
 
+# | Window Type   | Template                                                |
+# | ------------- | ------------------------------------------------------- |
+# | Variable Size | Expand → While Invalid: Shrink → Update                 |
+# | Fixed Size    | Expand → If Window Size == K: Update (if valid) → Slide |
 from collections import Counter
 class Solution:
     # Approach:
@@ -94,6 +98,61 @@ class Solution:
 
         return max_len
     
+
+    # Day-07 : 04/July/2026
+    # Notes: I got the intuition but completely missed the INVARIANT => [replacements = window_size - max_char_freq]
+    # Pattern:
+    # Variable Size Sliding Window
+
+    # Core Invariant:
+    # replacement_needed = window_size - max_char_freq
+
+    # Window is VALID iff:
+    # replacement_needed <= k
+
+    # Algorithm:
+    # 1. Expand the window.
+    # 2. Compute replacement_needed.
+    # 3. While replacement_needed > k:
+    #     - Shrink the window.
+    #     - Recompute replacement_needed.
+    # 4. Window is now valid.
+    # 5. Update the answer.
+
+    # Mistakes Made:
+    # 1. Missed the validity invariant:
+    #     window_size - max_char_freq <= k.
+    # 2. Forgot that shrinking changes both the window size and character frequencies,
+    # so replacement_needed must also be updated.
+    # 3. Initially focused on implementation before clearly defining the window invariant.
+    def solve(self, s: str, k: int) -> int:
+        res = 0
+        window = Counter()
+        start = 0
+
+        for end in range(len(s)):
+            # EXPAND
+            window[s[end]] += 1
+
+            # Once the WINDOW is expanded calculate the replacement needed
+            # rep = window_size - max_char_freq
+            rep = (end-start+1) - max(window.values())
+
+            # Invariant => (rep > k) => This will make our WINDOW INVALID.
+            # Hence FIX the window
+            while rep > k:
+                window[s[start]] -= 1
+
+                if window[s[start]] == 0:
+                    del window[s[start]]
+                start += 1
+                rep = (end-start+1) - max(window.values())
+
+            # By this point our WINDOW became VALID.
+            # Hence , UPDATE the answer
+            res = max(res, end-start+1)
+
+        return res
 
 o = Solution()
 # s = "ABAB"
