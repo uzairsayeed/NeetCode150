@@ -38,7 +38,7 @@ class Solution:
         return res
     
     # Approach-1: 
-    # Pattern : Prefix Sum Array
+    # Pattern : Prefix Sum + HashMap (Frequency Map)
     # Intuition Building:
         # When we build a prefix sum array, the value at any index 'i' of the prefix_sum array represents the sum of elements till index 'i'
         # prefix_sum[i] = sum (0 ... i) indexes
@@ -69,6 +69,41 @@ class Solution:
             if prefix_needed in prefix_cnt:
                 res += prefix_cnt[prefix_needed]
             prefix_cnt[prefix_sum] += 1
+
+        return res
+    
+
+    # Day-1: 07/July/2026
+    # Pattern: Prefix Sum + Counter
+    # Notes: I was ble to get thje intuition and solve the problem in single take.
+    def solve(self, nums: list[int], k: int) -> int:
+        res = 0
+        prefix_sum = 0
+        prefix_cntr = Counter()
+        # Inorder to handle the case for prefix_sum[0] => At 0th index
+        prefix_cntr[0] = 1
+
+        for num in nums:
+            # Calculate prefix sum on the fly
+            prefix_sum += num
+            # How we dervice at (prefix_sum-k) ??
+            # When we build a prefix_sum array ==> Any index 'i' of that array represents sum of elements from 0th index till ith index
+            # If Ive to find prefix sum of a subarray with start,end indexes as [l,r], It would be 
+                #  prefix_sum[r] - prefix_sum[l-1]
+            # Now let's us cosnider the given problem statement => FIND ALL SUBARRAY'S WHOSE SUM = K
+                # => We need to find ALL 
+                # => prefix_sum[r] - prefix_sum[l-1] = k
+            # If we are index 'i' , it means we have already calculated prefix_sum's till 'i' index and we know all the prev prefix_Sum's
+                # => We know 'r' and doin't know 'l-1'
+                # => prefix_sum[r] - k = prefix_sum[l-1]
+            # Since we have already calculated ALL prefix_sums till 'r' , we can simply search whether (prefix_sum[l-1]) exists in our computed prefixes or not
+            # We need to get the cnt of ALL such (prefix_sum[r] - k) from the computed prefix_sum's
+            prefix_needed = prefix_sum - k
+            if prefix_needed in prefix_cntr:
+                res += prefix_cntr[prefix_needed]
+
+            # Update the counter with our current prefix_sum
+            prefix_cntr[prefix_sum] += 1
 
         return res
 o = Solution()
