@@ -23,9 +23,18 @@
 # 1 <= n <= 20
 # -1000 <= matrix[i][j] <= 1000
 
+# | Transformation     | Operations                                                      |
+# | -------------------| --------------------------------------------------------------- |
+# | 90° Clockwise      | Transpose → Reverse each row                                    |
+# | 90° Anti-clockwise | Transpose → Reverse each column                                 |
+# | 180° Rotation      | Reverse rows → Reverse columns (or reverse the flattened array) |
+# | Transpose          | Swap `(i, j)` with `(j, i)`                                     |
+
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
-        # When we rotate , rows becomes cols and cols becomes rows ==> TRANSPOSE
+        # 90° clockwise rotation can be decomposed into:
+        # 1. Transpose (rows ↔ columns)
+        # 2. Reverse every row
         for r in range(len(matrix)):
             for c in range(r, len(matrix[r])):
                 matrix[r][c],matrix[c][r] = matrix[c][r],matrix[r][c]
