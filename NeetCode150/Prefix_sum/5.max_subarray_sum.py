@@ -24,8 +24,12 @@
 # 1 <= nums.length <= 105
 # -104 <= nums[i] <= 104
 
+# Kadane's Algorithm:
+# curr_sum = max(num, curr_sum + num)
+# answer = max(answer, curr_sum)
+
 class Solution:
-    def maxSubArray(self, nums: List[int]) -> int:
+    def maxSubArray1(self, nums: List[int]) -> int:
         res = float('-inf')
         min_seen_so_far = float('inf')
         prefix_sum = 0
@@ -34,5 +38,15 @@ class Solution:
             min_seen_so_far = min(min_seen_so_far, prefix_sum)
             prefix_sum += num
             res = max(res, prefix_sum - min_seen_so_far)
+
+        return res
+    
+    def maxSubArray(self, nums: List[int]) -> int:
+        res = float('-inf')
+        curr_sum = 0
+
+        for num in nums:
+            curr_sum = max(curr_sum+num, num)
+            res = max(res, curr_sum)
 
         return res
