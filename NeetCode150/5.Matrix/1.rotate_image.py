@@ -30,6 +30,9 @@
 # | 180° Rotation      | Reverse rows → Reverse columns (or reverse the flattened array) |
 # | Transpose          | Swap `(i, j)` with `(j, i)`                                     |
 
+# Complexity:
+# TC = O(n²)
+# SC = O(1)
 class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
         # 90° clockwise rotation can be decomposed into:
@@ -43,6 +46,27 @@ class Solution:
         for r in range(len(matrix)):
             matrix[r].reverse()
 
+    # Day-1: 13/July/2026
+    # Inuition:
+        # Transpose the given matrix ==> rows to cols ==> matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
+        # Reverse each row ==> Use list.reverse() - operates in-place and does not create a new list.
+    # Notes:
+        # I was able to solve it in single go.
+        # While transposing the given matrix , I we go all the from 0 to rows and 0 to cols, the transpose will be nullified
+        # Instead go from 0 to rows and row to cols
+    # Mistakes Made:
+        # None
+    def solve(self, matrix: List[List[int]]) -> List[List[int]]:
+        m, n = len(matrix), len(matrix[0])
+
+        # Transpose of the matrix
+        for row in range(m):
+            for col in range(row, n):
+                matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
+
+        # Reverse each row
+        for row in range(m):
+            matrix[row].reverse()
 
 o = Solution()
 matrix = [[1,2,3],[4,5,6],[7,8,9]]
