@@ -75,10 +75,51 @@ class Solution:
                 right -= 1
         return nums
     
+    # Day-1: 14/July/2026
+    # Intuition:
+        # The problem says to find the next lexicographically greater permutation of its integer
+        # which is nothing but the NEXT immediate larger number than the provided one
+        # Inorder to find the NEXT immediate larger number which position must be considred to begin with ?
+            # Is it Most Significant Position or the Least Significant Position (UNITS Place) 
+            # It should be LSP not MSP, if we start with MSP it wont lead to the NEXT immediate larger no
+            # Inorder to get the next immediate larger number , it must be the LSP
+        # Starting from LSP, if we encounter an element where nums[idx] < nums[idx+1] ==> This is where the pivot exists
+        # Once pivot_index is obtained => Find the smallest number which is larger than the pivot_element and SWAP it with
+        # Next just reverse the part whcih is RIGHT to pivot_index
+    # TC = O(n), SC = O(1)
+    # Mistakes Made:
+        # Was able to crack the logic
+    def solve(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        pivot_index = -1
 
+        # We start from the Least Significant Position (UNITS Place)
+        for idx in range(n-2, -1, -1):
+            if nums[idx] < nums[idx+1]:
+                pivot_index = idx
+                break
+
+        if pivot_index != -1:
+            # Find the smallest largest number than pivot element
+            for idx in range(n-1, -1, -1):
+                if nums[idx] > nums[pivot_index]:
+                    nums[idx], nums[pivot_index] = nums[pivot_index], nums[idx]
+                    break
+    
+        # Now reverse the list right to pivot_index
+        left, right = pivot_index+1, n-1
+
+        while left < right:
+            nums[left], nums[right] = nums[right], nums[left]
+            left += 1
+            right -= 1
+
+        return nums
 o = Solution()
 # nums = [1,2,5,4,3]
-nums = [3,2,1]
+# nums = [3,2,1]
+nums = [1,5,2,3,1]
+
 
 print(o.nextPermutation(nums))
         
