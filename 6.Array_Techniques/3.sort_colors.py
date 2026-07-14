@@ -69,7 +69,34 @@ class Solution:
 
         return nums
 
-    
+    # Day-1: 14/July/2026
+    # Intuition:
+        # Since we need to segregate 0s, 1s and 2s. This can be preocessed as 4 regions
+        # Region1 : All 0s => [0 to low -1]. 
+        # Region2 : All 1s => [low to mid-1].
+        # Region3 : Current / Unprocessed elements => [mid to high]
+        # Region4 : All 2s => [high+1 to n-1]
+        # low => represents the first position where NEXT 0 is to be placed. Everything before low is alrady finalised as 0's
+        # high => represents the last position where the next 2 should be placed. Everything after high is alrady finalised as 2's
+        # mid => represents the current unknown element being processed
+    # Mistakes Made:
+        # None
+    # Tc = O(n), SC = O(1)
+    def solve(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        low, mid, high = 0, 0, n-1
+
+        while mid <= high:
+            if nums[mid] == 0:
+                nums[low], nums[mid] = nums[mid], nums[low]
+                low += 1
+                mid += 1
+            elif nums[mid] == 2:
+                nums[high], nums[mid] = nums[mid], nums[high]
+                high -= 1
+            else:
+                mid += 1
+        return nums
 
 o = Solution()
 # nums = [2,0,2,1,1,0]
