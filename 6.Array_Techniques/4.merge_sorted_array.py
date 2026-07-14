@@ -40,7 +40,7 @@
 
 
 class Solution:
-    # Approach: 3 Pointer
+    # Approach: 3 Pointer/Two Pointers (Backward Merge)
     # Intuition:
         # There are two key observations:
             # 1. Both arrays are already sorted.
@@ -76,21 +76,55 @@ class Solution:
 
         return nums1
     
+    # Day-1: 14/July/2026
+    # Intuition:
+        # The PS, says that botht he arrays are sorted in ascending order that means the elements in each array are sorted.
+        # We can us ethe 3 pointer approach
+            # i => strats from m-1 index in arr1
+            # j => starts from the last index in arr2 ==> Why are we starting fropmk last index?
+                # => The reason to start from lst of arr2 is that we'll fill up the empty spaces of arr1 in reverse order 
+                # => which means we'll settle the arr1 from back by fixing the largest elments at its actual position in nums1
+            # k => starts from the m+n-1 index 
+        # Now once done with this , there are 2 possibilities
+            # P1: Arr1 is exhausted first and arr2 is still not processed => j!=-1
+                # In this case, we'll just add the left over elements of arr2 to arr1
+            # P2: arr2 is exhausted but arr1 is not exhausted => i !=-1
+                # In this case we need not to do anythng as the arr1 willalready be sorted by taht time
+    # TC = O(m+n), SC = O(1)
+    # Mistakes Made:
+        # None
+    def solve(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        i, j, k = m-1, n-1, m+n-1
+
+        while i >= 0 and j >= 0:
+            if nums1[i] < nums2[j]:
+                nums1[k] = nums2[j]
+                j -= 1
+            else:
+                nums1[k] = nums1[i]
+                i -= 1
+            k -= 1
+
+        while j != -1:
+            nums1[k] = nums2[j]
+            j -= 1
+            k -= 1
+    
 o = Solution()
-# nums1 = [1,2,3,0,0,0]
-# m = 3
-# nums2 = [2,5,6]
-# n = 3
+nums1 = [4,5,6,0,0,0]
+m = 3
+nums2 = [1,2,3]
+n = 3
 
 # nums1 = [1]
 # m = 1
 # nums2 = []
 # n = 0
 
-nums1 = [0]
-m = 0
-nums2 = [1]
-n = 1
+# nums1 = [0]
+# m = 0
+# nums2 = [1]
+# n = 1
 print(o.merge(nums1,m,nums2,n))
         
         
