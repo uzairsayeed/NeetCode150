@@ -77,7 +77,28 @@ class Solution:
                     
         return candidate
 
+    # Day-1: 14/July/2026
+    # Intuition:
+        # Cancel out opp nums and the numebr which will be left is the one in MAJORITY
+    # TC = O(n), SC = O(1)
+    # Mistakes Made:
+        # None
+    def solve(self, nums: List[int]) -> int:
+        candidate, cnt = None, 0
 
+        for num in nums:
+            if cnt == 0:
+                candidate = num
+                cnt += 1
+            else:
+                if candidate != num:
+                    cnt -= 1
+                else:
+                    cnt += 1
+
+        return candidate
+    
+    
 o = Solution()
 # nums = [3,2,3]
 nums = [2,2,1,1,1,2,2]
