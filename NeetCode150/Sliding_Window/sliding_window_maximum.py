@@ -109,6 +109,39 @@ class Solution:
 
         return res
     
+    # Day-07: 15/July/2026
+    # Recognition Trigger : Need to compute the maximum/minimum for every contiguous window of fixed size K.
+        # → Fixed Sliding Window + Monotonic Deque.
+    # Intuition:
+        # Maintain a deque ==> deque will hold indices , as it will help as to define the current window validity
+        # Deque will contain elements in DECREASING order, such that everytime the front will give as the MAX value for the current window
+        # Inorder to hadnle cases where front of deque is no longer part of current window check for the validity and pop out if the front doesnt belong top current window
+        # Update the answer
+    # TC = O(n), SC = O(n)
+    # Mistakes Made:
+        # None
+    def solve(self, nums: List[int], k: int) -> List[int]:
+        res = []
+        window = deque()
+        start = 0
+
+        for end in range(len(nums)):
+            while len(window) and nums[window[-1]] <= nums[end]:
+                window.pop()
+
+            # Expand
+            window.append(end)
+
+            # Fix
+            while window and window[0] < start:
+                window.popleft()
+
+            # Update
+            if end-start+1 == k:
+                res.append(nums[window[0]])
+                start += 1
+
+        return res
 o = Solution()
 nums = [3,1,1,3]
 k = 3
