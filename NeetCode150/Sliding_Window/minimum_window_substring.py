@@ -34,6 +34,20 @@
 
 # Follow up: Could you find an algorithm that runs in O(m + n) time?
 
+# Template 1: Expand → Fix → Update
+# There are 2 types in T1:
+# Pattern 1: Expand → Window becomes VALID → UPDATE → Shrink while VALID
+# This is used when you're trying to find the smallest valid window.
+# Why?
+# Because once the window is valid, you want to make it as small as possible while keeping it valid.
+
+# Pattern 2: Expand → Window becomes INVALID → Shrink until VALID → UPDATE
+# This is used when you're trying to find the largest/longest valid window.
+# Why?
+# Here you're trying to keep the window as large as possible.
+# The moment it becomes invalid, you shrink just enough to restore validity.
+
+# Template 2: Fix → Expand → Update
 
 
 # | Window Type   | Template                                                |
@@ -288,17 +302,101 @@ class Solution:
                 if c1[s[start]] == 0:
                     del c1[s[start]]
 
-                if s[start] in c2 and c1[s[start]] < c2[s[start]]:
+                if s[start] in c2 and c1[s[start]] != c2[s[start]]:
                     have -= 1
                 start += 1
                 
         return res
 
+    # Day-07: 15/July/2026
+    # Recognition Trigger : Find smallest substring with all chars of 't' => variable sliding window
+    # Intuition:
+        # Pattern : Expand → Window becomes VALID → Shrink while VALID
+        # This is used when you're trying to find the smallest valid window.
+        # Why?
+        # Because once the window is valid, you want to make it as small as possible while keeping it valid.
+    # TC = O(n), n= len(s) and SC = O(m+n)
+    # Mistakes Made:
+        # Was circling around the solution, had a look at the state machine and was bel to crack
+    def solve1(self, s: str, t: str) -> str:
+        res = ''
+        min_len = float('inf')
+        c1, c2 = Counter(), Counter(t)
+        start = 0
 
+        for end in range(len(s)):
+            # Expand
+            c1[s[end]] += 1
+
+            # Check if WINDOW IS VALID
+            while not (c2-c1):
+                # If VALID => UPDATE answer => SHRINK the WINDOW => Until INVALID
+                curr_window_size = end-start+1
+                if min_len > curr_window_size:
+                    min_len = curr_window_size
+                    res = s[start:end+1]
+
+                c1[s[start]] -= 1
+                if c1[s[start]] == 0:
+                    del c1[s[start]]
+
+                start += 1  
+
+        return res
+    
+    # Day-07: 15/July/2026
+    # Recognition Trigger : Find smallest substring with all chars of 't' => variable sliding window
+    # Intuition:
+        # Pattern : Expand → Window becomes VALID → Shrink while VALID
+        # This is used when you're trying to find the smallest valid window.
+        # Why?
+        # Because once the window is valid, you want to make it as small as possible while keeping it valid.
+    # TC = O(n), n= len(s) and SC = O(m+n)
+    # Mistakes Made:
+        # Was circling around the solution, had a look at the state machine and was bel to crack
+    def solve(self, s: str, t: str) -> str:
+        res = ''
+        min_len = float('inf')
+
+        c1, c2 = Counter(), Counter(t)
+        have, need = 0, len(c2)
+
+        start = 0
+
+        for end in range(len(s)):
+            # Expand
+            c1[s[end]] += 1
+
+            # Update the HAVE value => Inorder to determine WINDOW is VALID or not
+            if s[end] in c2 and c1[s[end]] == c2[s[end]]:
+                have += 1
+
+            # The below condition ==> VALID WINDOW
+            while have == need:
+                curr_window_len = end-start+1
+                # UPDATE answer
+                if min_len > curr_window_len:
+                    min_len = curr_window_len
+                    res = s[start:end+1]
+
+                # UPDATE window
+                c1[s[start]] -= 1
+                if c1[s[start]] == 0:
+                    del c1[s[start]]
+                
+                if s[start] in c2 and c1[s[start]] < c2[s[start]]:
+                    have -= 1
+
+                # SHRINK
+                start += 1
+
+        return res
+    
+    
 o = Solution()
-s = "ADOBECODEBANC"
-t = "ABC"
+# s = "ADOBECODEBANC"
+# t = "ABC"
 
-# s = "aa"
-# t = "a"
+s = "aa"
+t = "a"
 print(o.minWindow(s, t))
