@@ -121,6 +121,43 @@ class Solution:
 
                     start += 1
         return False
+    
+
+    # Day-7: 15/July/2026
+    # Pattern : Sliding Window (FIXED WINDOW) + HashMap
+    # Intuition :
+        # A permutation of s1 must contain exactly the same characters as s1.
+        # Therefore, every valid candidate substring must have length == len(s1).
+        # Since the window size never changes, this is a FIXED SIZE SLIDING WINDOW problem.
+        # Maintain the frequency of the current window in s2.
+        # Whenever the window size becomes len(s1), compare the two frequency maps.
+        # Then slide the window by removing the left character and adding the next character.
+    # Recognition Trigger : Need to find a substring of exact length K satisfying some condition (anagram, permutation, frequency, sum, etc.) → Fixed Size Sliding Window.
+    # TC = O(n), where n = len(s2) and SC = O(m+n), where m  len(s1)
+    # Mistakes Made:
+        # Completely missed the FIXED WINDOW concept
+        # After going through the notees, was able to code
+    def solve(self, s1: str, s2: str) -> bool:
+        c1, c2 = Counter(s1), Counter()
+        start = 0
+
+        for end in range(len(s2)):
+            # EXPAND step
+            c2[s2[end]] += 1
+
+            # Check whether the processed part of s2 is of same len as s1
+            if end-start+1 == len(s1):
+                if c1 == c2:
+                    return True
+                # The below condition is the INVARIANT
+                else: 
+                    c2[s2[start]] -= 1
+                    if c2[s2[start]] == 0:
+                        del c2[s2[start]]
+                    # UPDATE step
+                    start += 1
+        return False
+    
 o = Solution()
 s1 = "ab"
 s2 = "eidbaooo"
