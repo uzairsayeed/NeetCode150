@@ -140,6 +140,79 @@ class Solution:
 
         return max_sum
     
+    # Day-7: 17/July/2026
+    # Recognition Pattern: We need max sum subarray of size K with no duplicates ==> FIXED Sliding WINDOW + HAshmap
+    # Intuition:
+        # SInce it's a FIXED Sliding Window problem, we EXPAND => If WINDOW VALID => Update the answer =>< SLIDE
+    # Mistakes Made:
+        # Used sum(window) for every window, leading to O(nk) and TLE.
+        # Had a glimpse of the optimised code ==> understood that we should maintain running sum
+        # Initially checked uniqueness using max(window.values()) == 1.
+        # A simpler observation is:
+        #     len(freq_map) == k
+        # because window size is already exactly k.
+        # Learnt to maintain a running sum so each slide is O(1).
+    def solve1(self, nums: List[int], k: int) -> int:
+        res = 0
+        window = Counter()
+        start = 0
+
+        for end in range(len(nums)):
+            # Expand
+            window[nums[end]] += 1
+
+            # Since we need to find maxsum forf a fixed size subarray of size k
+            # This is a FIXED Sliding Window problem
+            if sum(window.values()) == k:
+                print('window --> ', window)
+                max_freq = max(window.values())
+
+                # Check for uniqueness
+                if max_freq == 1:
+                    # UPDATE
+                    res = max(res, sum(window.keys()))
+                    print('res --> ', res)
+
+                window[nums[start]] -= 1
+                if window[nums[start]] == 0:
+                    del window[nums[start]]
+
+                # SLIDE
+                start += 1
+
+        return res
+    
+    def solve(self, nums: List[int], k: int) -> int:
+        res = 0
+        window = Counter()
+        curr_sum = 0
+        start = 0
+
+        for end in range(len(nums)):
+            # EXPAND
+            window[nums[end]] += 1
+            curr_sum += nums[end]
+
+            # Since we need to find maxsum forf a fixed size subarray of size k
+            # This is a FIXED Sliding Window problem
+            # Check WINDOW is VALID or not
+            if end-start+1 == k:
+                # Check the second condition of NO DUPS
+                if len(window) == k:
+                    # UPDATE
+                    res = max(res, curr_sum)
+
+                # FIX the window before SLIDE
+                window[nums[start]] -= 1
+                curr_sum -= nums[start]
+
+                if window[nums[start]] == 0:
+                    del window[nums[start]]
+
+                # SLIDE
+                start += 1
+
+        return res
 
 o = Solution()
 nums = [1,5,4,2,9,9,9]
