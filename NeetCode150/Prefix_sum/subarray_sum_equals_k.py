@@ -106,6 +106,37 @@ class Solution:
             prefix_cntr[prefix_sum] += 1
 
         return res
+    
+    # Day-07: 18/July/2026
+    # Recognition Trigger: Need information about ANY contiguous subarray. 
+        # If a subarray property can be expressed as prefix[r] - prefix[l-1],
+        # think Prefix Sum + HashMap.
+    # Intuition:
+        # We need ALL subarrays whose sum = k
+        # Any subarray sum of [l,r] => prefix_sum[r]-prefix_sum[l-1] = k => {PREFIX_NEEDED} prefix_sum[r]-k = prefix_sum[l-1]
+        # As we are building prefix_sum on the fly, if we are at idx [r] then all the prefix_sum's before that idx we must have already computed
+        # That's the reason we are searching for total number of occurrences {PREFIX_NEEDED} in our prefix_map
+    # TC = O(n), SC = O(n)
+    # Mistakes Made:
+        # Initially I was bulding prefix_map as index map => {key:value} = {idx: prefix_sum value of that idx}
+        # cuz of whcih i was not able to FIND ALL the opccurrences of prefix_needed
+        # Later , I realised to use freq_map {COUNTER}, which helps in maintaining track of ALL the occurrences 
+    def solve(self, nums: List[int], k: int) -> int:
+        res = 0
+        prefix_sum = 0
+        prefix_map = Counter()
+        prefix_map[0] = 1
+
+        for idx in range(len(nums)):
+            prefix_sum += nums[idx]
+            prefix_needed = prefix_sum-k
+
+            if prefix_needed in prefix_map:
+                res += prefix_map[prefix_needed]
+
+            prefix_map[prefix_sum] += 1
+
+        return res
 o = Solution()
 # nums = [1,1,1]
 # k = 2
