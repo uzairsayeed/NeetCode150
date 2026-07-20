@@ -1,226 +1,214 @@
-# 36. Valid Sudoku
+# 238. Product of Array Except Self
 
-# Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+# Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
 
-# Each row must contain the digits 1-9 without repetition.
-# Each column must contain the digits 1-9 without repetition.
-# Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
-# Note:
+# The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
 
-# A Sudoku board (partially filled) could be valid but is not necessarily solvable.
-# Only the filled cells need to be validated according to the mentioned rules.
+# You must write an algorithm that runs in O(n) time and without using the division operation.
+
  
 
 # Example 1:
 
-
-# Input: board = 
-# [["5","3",".",".","7",".",".",".","."]
-# ,["6",".",".","1","9","5",".",".","."]
-# ,[".","9","8",".",".",".",".","6","."]
-# ,["8",".",".",".","6",".",".",".","3"]
-# ,["4",".",".","8",".","3",".",".","1"]
-# ,["7",".",".",".","2",".",".",".","6"]
-# ,[".","6",".",".",".",".","2","8","."]
-# ,[".",".",".","4","1","9",".",".","5"]
-# ,[".",".",".",".","8",".",".","7","9"]]
-# Output: true
+# Input: nums = [1,2,3,4]
+# Output: [24,12,8,6]
 # Example 2:
 
-# Input: board = 
-# [["8","3",".",".","7",".",".",".","."]
-# ,["6",".",".","1","9","5",".",".","."]
-# ,[".","9","8",".",".",".",".","6","."]
-# ,["8",".",".",".","6",".",".",".","3"]
-# ,["4",".",".","8",".","3",".",".","1"]
-# ,["7",".",".",".","2",".",".",".","6"]
-# ,[".","6",".",".",".",".","2","8","."]
-# ,[".",".",".","4","1","9",".",".","5"]
-# ,[".",".",".",".","8",".",".","7","9"]]
-# Output: false
-# Explanation: Same as Example 1, except with the 5 in the top left corner being modified to 8. Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+# Input: nums = [-1,1,0,-3,3]
+# Output: [0,0,9,0,0]
  
 
 # Constraints:
 
-# board.length == 9
-# board[i].length == 9
-# board[i][j] is a digit 1-9 or '.'.
+# 2 <= nums.length <= 105 => ALLOWED TC can be at max O(nlogn)
+# -30 <= nums[i] <= 30 => Negatives are also present
+# The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
+ 
 
-from collections import Counter
+# Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+
+# Observations:
+# 1. => ALLOWED TC can be at max O(nlogn)
+# 2. => Negatives are also present
+
 class Solution:
-    def isValidSudoku1(self, board: List[List[str]]) -> bool:
-        res = True
+    def productExceptSelf1(self, nums: List[int]) -> List[int]:
+        res = []
+        for idx in range(len(nums)):
+            curr_product_left = 1 
+            curr_product_right = 1
 
-        def isRowAndColValid(start_idx: int) -> bool:
-            row_set = set()
-            col_set = set()
+            # To calculate the product of nums to the right except itself 
+            for idx1 in range(idx+1, len(nums)):
+                curr_product_right *= nums[idx1]
 
-            for idx in range(9):
-                curr_row_ele = board[start_idx][idx]
-                curr_col_ele = board[idx][start_idx]
+            # To calculate the product of nums to the left except itself
+            for idx2 in range(idx-1,-1, -1):
+                curr_product_left *= nums[idx2]
 
-                if curr_row_ele != '.':
-                    if curr_row_ele not in row_set:
-                        # print('curr_row_ele --> ', curr_row_ele)
-                        row_set.add(board[start_idx][idx])
-                    else:
-                        return False
-                    
-                if curr_col_ele != '.':
-                    if curr_col_ele not in col_set:
-                        # print('curr_col_ele --> ', curr_col_ele)
-                        col_set.add(board[idx][start_idx])
-                    else:
-                        return False
-                    
+            # print('curr --> ', nums[idx])
+            # print('curr_product_left --> ', curr_product_left)
+            # print('curr_product_right --> ', curr_product_right)
 
-            return True
-        
-        def is3x3GridValid(grid_coordinates: List[List[int]]) -> bool:
-            r_start, c_start = grid_coordinates[0]
-            r_end, c_end = grid_coordinates[1]
-
-            grid_set = set()
-            for r in range(r_start, r_end+1):
-                for c in range(c_start, c_end+1):
-                    curr_ele = board[r][c]
-                    # print('curr_ele --> ', curr_ele)
-
-                    if curr_ele != '.':
-                        if curr_ele not in grid_set:
-                            grid_set.add(curr_ele)
-                            # print('grid_set --> ', grid_set)
-
-                        else:
-                            return False
-            return True
-        
-        for idx in range(9):
-            # print('curr_idx --> ', idx)
-            res = isRowAndColValid(idx)
-            if not res:
-                return res
-            
-        grid_start_end_idx_arr = [
-            [[0,0], [2,2]],
-            [[0,3], [2,5]],
-            [[0,6], [2,8]],
-            [[3,0], [5,2]],
-            [[3,3], [5,5]],
-            [[3,6], [5,8]],
-            [[6,0], [8,2]],
-            [[6,3], [8,5]],
-            [[6,6], [8,8]]
-        ]
-            
-        for grid in grid_start_end_idx_arr:
-            # print('gird --> ', grid)
-            res = is3x3GridValid(grid)
-            # print('res --> ', res)
-            if not res:
-                return res
-        return res
-            
-
-    # Optimised Approach: 
-        # 1. Remove Hardcoded 3×3 Grid Coordinates => Map every element to each of the 9 boxes 
-        # 2. Single Traversal Instead of Three Traversals => Check all 3 conditions in single pass
-        # 3. Compute Box Index Instead of Iterating Boxes ==> box_idx = (r//3)*3+(c//3)
-        # 4. Use Three Arrays of Sets for rows,cols and boxes
-    # Optimisation Insight : Create array of sets for each row , col and box
-
-    def isValidSudoku2(self, board: List[List[str]]) -> bool:
-        res = True
-        rows_set = [set() for _ in range(9)]
-        cols_set = [set() for _ in range(9)]
-        boxes_set = [set() for _ in range(9)]
-
-        # print('rows_set --> ', rows_set)
-        # print('cols_set --> ', cols_set)
-        # print('boxes_set --> ', boxes_set)
-
-        for r in range(9):
-            for c in range(9):
-                # print('r, c --> ', r, c)
-                curr = board[r][c]
-
-                if curr == '.':
-                    continue
-
-                box_idx = (r//3) * 3 + (c//3)
-
-                if (
-                    curr in rows_set[r] or
-                    curr in cols_set[c] or
-                    curr in boxes_set[box_idx]
-                ):
-                    res = False
-                    break
-
-                rows_set[r].add(curr)
-                cols_set[c].add(curr)
-                boxes_set[box_idx].add(curr)
+            res.append(curr_product_left * curr_product_right)
 
         return res
+    
 
 
+    def productExceptSelf2(self, nums: List[int]) -> List[int]:
+        res = [1]*len(nums)
+
+        prefix_prdt = [1]*len(nums)
+        prefix_prdt[0] = nums[0]
+        for idx in range(1,len(nums)):
+             curr = nums[idx] * prefix_prdt[idx-1]
+             prefix_prdt[idx] = curr
+
+        postfix_prdt = [1] * len(nums)
+        postfix_prdt[len(nums)-1] = nums[len(nums)-1]
+        for idx in range(len(nums)-2, -1, -1):
+             curr = nums[idx] * postfix_prdt[idx+1]
+             postfix_prdt[idx] = curr
+
+        # print('prefix_prdt --> ', prefix_prdt)
+        # print('postfix_prdt --> ', postfix_prdt)
+
+        for idx in range(len(nums)):
+            if idx == 0:
+                res[idx] = 1 * postfix_prdt[idx+1]
+            elif idx == len(nums)-1:
+                res[idx] = prefix_prdt[idx-1] * 1
+            else:
+                res[idx] = prefix_prdt[idx-1] * postfix_prdt[idx+1]
+
+        return res
+    
+
+    def productExceptSelf3(self, nums: List[int]) -> List[int]:
+        res = [1]*len(nums)
+
+        prefix_prdt = 1
+        postfix_prdt = 1
+
+        for idx in range(len(nums)):
+            res[idx] = prefix_prdt
+            prefix_prdt = prefix_prdt * nums[idx]
+
+        for idx in range(len(nums)-1, -1, -1):
+            res[idx] = postfix_prdt * res[idx]
+            postfix_prdt = postfix_prdt * nums[idx]
+
+        return res
+    
+
+    def productExceptSelf3(self, nums: List[int]) -> List[int]:
+        res = [1]* len(nums)
+        prefix, postfix = 1, 1
+
+        for idx in range(len(nums)):
+            res[idx] = prefix
+            prefix = prefix * nums[idx]
+        print(res)
+        for idx in range(len(nums)-1, -1, -1):
+            res[idx] = postfix * res[idx]
+            postfix = postfix * nums[idx]
+
+        return res
+    
+
+    # Day-1: 18/June/2026
+    # Pattern: prefix and postfix array
+    # Recognition Trigger: Toi get prdt of array except element itself => rightPrdt x leftPrdt
+    # Brute Force: Two loops. O(n2)
+    # Optimization Insight: Instead of creating 2 seperate arrays for prefix and postfix , use the output arr
+    def productExceptSelf4(self, nums: List[int]) -> List[int]:
+        prefix_prdt = [1]*len(nums)
+        prefix_prdt[0] = nums[0]
+        for idx in range(1,len(nums)):
+            prefix_prdt[idx] = prefix_prdt[idx-1] * nums[idx]
+
+        postfix_prdt = [1]*len(nums)
+        postfix_prdt[len(nums)-1] = nums[len(nums)-1]
+        for idx in range(len(nums)-2, -1, -1):
+            postfix_prdt[idx] = postfix_prdt[idx+1] * nums[idx]
+
+        print('prefix_prdt --> ', prefix_prdt)
+        print('postfix_prdt --> ', postfix_prdt)
+
+        res = [1]*len(nums)
+        for idx in range(len(nums)):
+            print('idx --> ', idx)
+            if idx == 0:
+                res[idx] = postfix_prdt[idx+1]
+            elif idx == len(nums)-1:
+                res[idx] = prefix_prdt[idx-1]
+            else:
+                res[idx] = prefix_prdt[idx-1] * postfix_prdt[idx+1]
+        return res
+
+    def productExceptSelf5(self, nums: List[int]) -> List[int]:
+        res = [1]*len(nums)
+        prefix_prdt = 1
+        postfix_prdt = 1
+
+        for idx in range(0,len(nums)):
+            res[idx] = prefix_prdt
+            prefix_prdt = prefix_prdt * nums[idx]
+
+        for idx in range(len(nums)-1, -1, -1):
+            res[idx] = postfix_prdt * res[idx]
+            postfix_prdt = postfix_prdt * nums[idx]
+        return res
+    
     # Day-7: 24/June/2026
-    # Pattern: Set Membership
-    # Note: Was able to solve
-    def isValidSudoku(self, board: List[List[str]]) -> bool:
-        rows = [set() for i in range(9)]
-        cols = [set() for i in range(9)]
-        boxes = [set() for i in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if board[r][c] == '.':
-                    continue
+    # Pattern: prefix/suffix arrays
+    # Recognition Trigger: Prd except itself
+    # Note: Was able to solve it. Core logic res of each ele is the prd of left values and right values
+    def productExceptSelf(self, nums: list[int]) -> list[int]:
+        res = [1]*len(nums)
+        left_prd, right_prd = 1, 1
 
-                box_id = (r//3)*3 + c//3
-                if (
-                    board[r][c] in rows[r] or
-                    board[r][c] in cols[c] or
-                    board[r][c] in boxes[box_id]
-                    ):
-                    return False
-                rows[r].add(board[r][c])
-                cols[c].add(board[r][c])
-                boxes[box_id].add(board[r][c])
-        return True
+        # Calculate left prd
+        for idx in range(1, len(nums)):
+            res[idx] = left_prd * nums[idx-1]
+            left_prd *= nums[idx-1]
+            
+        # print('res --> ', res)
+        
+        # Calculate right prd
+        for idx in range(len(nums)-1, -1, -1):
+            res[idx] = right_prd * res[idx]
+            right_prd *= nums[idx]
+
+        return res
+
+    # Day-30: 20/July/2026
+    # Recognition Trigger : Need the answer for every index using information from BOTH the left and the right side of that index.
+        # Think: Left contribution × Right contribution
+    # Intuition:
+        # For every element we need product of its LEFT elements X product of its RIGHT elements
+        # We can maintain 2 sepearate prd_left and prd_right arrays but this will lead to SC=O(2N)
+        # Instead we can maintain running prd_left and prd_right
+    # TC = O(n), SC = O(1) // Excluding the res array
+    # Mistakes Made:
+        # None
+    def solve(self, nums: List[int]) -> List[int]:
+        res = [1] * len(nums)
+        prd_left, prd_right = 1, 1
+
+        for idx in range(1, len(nums)):
+            res[idx] = prd_left * nums[idx-1]
+            prd_left *= nums[idx-1]
+
+        for idx in range(len(nums)-2, -1, -1):
+            res[idx] = res[idx] * (prd_right * nums[idx+1])
+            prd_right *= nums[idx+1]
+
+        return res
 o = Solution()
+nums = [-1,1,0,-3,3]
+# nums = [1,2,3,4]
 
-# board = [["5","3",".",".","7",".",".",".","."]
-# ,["6",".",".","1","9","5",".",".","."]
-# ,[".","9","8",".",".",".",".","6","."]
-# ,["8",".",".",".","6",".",".",".","3"]
-# ,["4",".",".","8",".","3",".",".","1"]
-# ,["7",".",".",".","2",".",".",".","6"]
-# ,[".","6",".",".",".",".","2","8","."]
-# ,[".",".",".","4","1","9",".",".","5"]
-# ,[".",".",".",".","8",".",".","7","9"]]
+print(o.productExceptSelf(nums))
 
-
-# board = [["8","3",".",".","7",".",".",".","."]
-# ,["6",".",".","1","9","5",".",".","."]
-# ,[".","9","8",".",".",".",".","6","."]
-# ,["8",".",".",".","6",".",".",".","3"]
-# ,["4",".",".","8",".","3",".",".","1"]
-# ,["7",".",".",".","2",".",".",".","6"]
-# ,[".","6",".",".",".",".","2","8","."]
-# ,[".",".",".","4","1","9",".",".","5"]
-# ,[".",".",".",".","8",".",".","7","9"]]
-
-board = [
-    [".",".",".",".","5",".",".","1","."],
-    [".","4",".","3",".",".",".",".","."],
-    [".",".",".",".",".","3",".",".","1"],
-    ["8",".",".",".",".",".",".","2","."],
-    [".",".","2",".","7",".",".",".","."],
-    [".","1","5",".",".",".",".",".","."],
-    [".",".",".",".",".","2",".",".","."],
-    [".","2",".","9",".",".",".",".","."],
-    [".",".","4",".",".",".",".",".","."]
-]
-
-print(o.isValidSudoku(board))
