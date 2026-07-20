@@ -153,6 +153,32 @@ class Solution:
         # print('char_arr_map --> ', char_arr_map)
 
         return list(char_arr_map.values())
+    
+
+    # Day-30: 20/July/2026
+    # Recognition Trigger : Need to group or compare objects irrespective of their ordering. 
+        # Find a CANONICAL REPRESENTATION for every object.
+    # Intuition:
+        # We can use a hashmap (frequency map) to group elements but it wont be ordered
+        # So next way, is to maintain order of the freq_map, this can be achieved by using a FROZEN-SET ON TUPLES
+        # The above is one way but the more elegant apporach is to use a hashmap whre {key:value} => {26-CHAR-ARRAY: [LIST of strs]}
+    # TC = O(mxn), where m=len(strs) and n=len(str)
+    # SC = O(mxn)
+    # Mistakes Made:
+        # None
+    def solve(self, strs: List[str]) -> List[str]:
+        cannonical_map = defaultdict(list)
+
+        for string in strs:
+            curr_char_arr = [0 for char in range(26)]
+            for char in string:
+                curr_char_arr[ord(char) - ord('a')] += 1
+
+            # Since list is mutable and mutable element cannot be a key of a map
+            # We are using tuple which is immutable in nature
+            cannonical_map[tuple(curr_char_arr)].append(string)
+
+        return list(cannonical_map.values())
 
 o = Solution()
 strs = ["eat","tea","tan","ate","nat","bat"]
