@@ -121,6 +121,39 @@ class Solution:
                     
         return res
 
+    # Day-30: 21/July/2026
+    # Recognition Trigger: 
+        # Need Top K based on frequency/ranking.
+        #           ↓
+        # Count frequencies first.
+        #           ↓
+        # Then think:
+        #  Bucket Sort (if frequency is bounded)
+        #  Heap (if K is small)
+    # Pattern: Bucket Sort + Hash Map or Heap
+    # Intuition:
+        # Since we need TOP K FREQUENT elemnts
+        # First thought was to sort the arr and scrap the top K , but this will lead to TC:O(nlogn)
+        # Inorder to optimise it, we can think of using a cnt_array
+        # The lenght of cnt_array can be max len(nums)+1, since in any given array the max frequency would be len(nums), given the arr contains only 1 unique element
+    # TC = O(n), SC = O(n+n)
+    # Mistakes Made:
+        # None
+    def solve(self, nums: List[int], k: int) -> List[int]:
+        res = []
+        freq_map = Counter(nums)
+        cnt_arr = [[] for _ in range(len(nums)+1)]
+
+        for num, freq in freq_map.items():
+            cnt_arr[freq].append(num)
+
+        ptr = len(nums)
+        while k > 0 and ptr >= 0:
+            for num in cnt_arr[ptr]:
+                res.append(num)
+                k -= 1
+            ptr -= 1
+        return res
 
 o = Solution()
 nums = [1]
