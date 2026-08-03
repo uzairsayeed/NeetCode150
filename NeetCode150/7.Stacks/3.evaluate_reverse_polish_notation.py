@@ -50,7 +50,7 @@ class Solution:
         # Each intermediate result becomes an operand for future operations.
     # TC = O(n), SC = O(n). Since allowed_operators map contains only 4 values
     def evalRPN(self, tokens: List[str]) -> int:
-        # In this we'll be STORING numbers and are WAITING for an operand
+        # In this we'll be STORING numbers and are WAITING for an operator
         element_stack = []
         allowed_operators = {'+', '-', '*', '/'}
 
@@ -72,6 +72,35 @@ class Solution:
                 element_stack.append(int(ele))
         return element_stack[0]
 
+
+    # Day-7: 02/Aug/2026
+    # Recognition Trigger: Expression Evaluation
+    # Pattern: Stack
+    # Intuition:
+        # Push elements into the stack and when operator is encountered pop 2 elements and insert the resultant back into the stack]
+    # Mistakes Made:
+        # None
+    def solve(self, tokens: list[str]) -> int:
+            stack = []
+            operators = ["+", "-", "*", "/"]
+    
+            for ele in tokens:
+                if ele not in operators:
+                    stack.append(int(ele))
+                else:
+                    op2 = stack.pop()
+                    op1 = stack.pop()
+    
+                    if ele == '+':
+                        stack.append(op1 + op2)
+                    elif ele == '-':
+                        stack.append(op1 - op2)
+                    elif ele == '*':
+                        stack.append(op1 * op2)
+                    else:
+                        res = op1/op2
+                        stack.append(int(res))
+            return stack[-1]
 
 o = Solution()
 # tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
