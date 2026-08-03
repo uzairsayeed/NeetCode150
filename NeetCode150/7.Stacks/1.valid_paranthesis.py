@@ -79,6 +79,32 @@ class Solution:
                     return False
         print('res --> ', res)
         return False if len(res) else True
+
+    # Day-7: 02/Aug/2026
+    # Recognition Trigger: Pattern Matching
+    # Pattern: Stack
+    # Intuition:
+        # Insert only valid elements into stack. Valid elements are only OPEN brackets
+        # When an closing bracket is encountered , check whether the TOP of stack conatins the complimentary ele of the curr ele
+            # If YES ==> POP
+            # If NO ==> Insert /Return
+    # Mistakes Made:
+        # None
+    def solve(self, s: str) -> bool:
+        ele_map = {')': '(', ']': '[', '}': '{'}
+        stack = []
+
+        for ele in s:
+            if ele in ele_map.values():
+                stack.append(ele)
+            else:
+                if stack and ele_map[ele] == stack[-1]:
+                    stack.pop()
+                else:
+                    stack.append(ele)
+
+        return False if stack else True
+        
     
 o = Solution()
 # s = "()[]{}"
