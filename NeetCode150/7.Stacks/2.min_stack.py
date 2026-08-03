@@ -111,6 +111,41 @@ class MinStack:
     def getMin(self) -> int:
         return self.min_values[-1]
 
+
+# Day-7: 02/Aug/2026
+# Recognition Pattern: History of min elemets
+# Pattern: Two Stack
+# Intuition:
+    # Use 2 stacks, one for regular ops and other for maintianing MIN ELEMENT at each state
+    # Min satck should contain the min element at any particular state
+        # Ex: If there are 3 elements in stack then min_stack will contain 3 elements at the top elemtn will be the min of all the 3 eleemtns
+# Mistakes Made:
+    # Was able to crack the intuition, but made a sliught mistake in the appending condition of min_stack
+
+class solve:
+
+    def __init__(self):
+        self.elements = []
+        self.min_elements = []
+
+    def push(self, value: int) -> None:
+        self.elements.append(value)
+
+        if self.min_elements:
+             curr_min = min(self.min_elements[-1], value)
+        else:
+             curr_min = value
+        self.min_elements.append(curr_min)
+    def pop(self) -> None:
+            self.elements.pop()
+            self.min_elements.pop()        
+
+    def top(self) -> int:
+        return self.elements[-1]
+
+    def getMin(self) -> int:
+        return self.min_elements[-1]
+
 # Your MinStack object will be instantiated and called as such:
 obj = MinStack()
 obj.push(-2)
