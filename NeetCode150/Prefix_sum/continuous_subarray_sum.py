@@ -99,10 +99,51 @@ class Solution:
                 prefix_length = idx - prefix_map[prefix_needed]
                 if prefix_length >= 2:
                     return True
+            # earliest occurrence must be preserved since it yields the longest valid subarray
             if prefix_needed not in prefix_map:
                 prefix_map[prefix_needed] = idx
 
         return False
+
+
+    # Day-7: 07/Aug/2026
+    # Recognition Trigger: Subarray property involves divisibility (sum % k == 0) and 
+        # the subarray can be expressed as the difference of two prefix sums, derive the equation using modular arithmetic. 
+        # If it simplifies to an equality of remainders, think Prefix Sum % k + HashMap.
+    # Pattern: Prefix Sum + Hashmap(Modulo)
+    # Intuition:
+        # Any subarray sum [l,r] can be represented as prefix_sum[r] - prefix_sum[l-1]
+        # Given that sum of subarray muist be a multiple of k
+            # => (prefix_sum[r] - prefix_sum[l-1]) % k = 0
+            # => prefix_sum[r] % k = prefix_sum[l-1] % k
+            # So prefix_needed becomes prefix_sum[r] % k
+        # Inorder to handle the case for perfect divisibility where prefix_needed = 0
+        # We must initialise the map with {0:-1}
+        # ANd also, the map will store only the first seen entires , if an entry is already present in the map then need not to update it will later idx vale
+    # Notes:
+        # Initially missed the %k logic , was performing the /k operation
+        # Looked at the notes and read the recognition pattern data.
+        # Coded it, but missed the condition where we add only the un seen entries in the map
+        
+    def solve(self, nums: List[int], k: int) -> bool:
+        prefix_sum = 0
+        prefix_map = {0:-1}
+
+        for idx,num in enumerate(nums):
+            prefix_sum += num
+            prefix_needed = prefix_sum % k
+
+            if prefix_needed in prefix_map:
+                prefix_size = idx - prefix_map[prefix_needed]
+                print('prefix_size --> ', prefix_size)
+                if prefix_size >= 2:
+                    return True
+
+            if prefix_needed not in prefix_map:
+                prefix_map[prefix_needed] = idx
+
+        return False
+        
 o = Solution()
 # nums = [23,2,6,4,7]
 # k = 6
