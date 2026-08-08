@@ -59,7 +59,6 @@ class Solution:
         return res
     
 
-    class Solution:
     # Day-1: 14/July/2026
     # Intuition: 
         # To print spiral we need to move in 4 directions and must initalise the boundary vars
@@ -112,8 +111,64 @@ class Solution:
                 left += 1
 
         return res
+
+
+    # Day-7: 08/Aug/2026
+        # Recognition Pattern: Spiral matrix
+        # Pattern: Matrix
+        # Intuition:
+            # Traverse from LEFT -> RIGHT
+                # ROW and TOP fixed
+            # Traverse from TOP to BOTTOM
+                # COL and RIGHT fixed
+            # Traverse from RIGHT to LEFT
+                # ROW and BOTTOM fixed
+                # Here, we need to check the condition top <= bottom, since we are doing bottom +=1 
+                # It needs to be dealt in next iteration
+            # Traverse from BOTTOM to TOP
+                # COL and LEFT fixed
+                # Here we need to check the condition left <= right , since we are doing left += 1
+                # It needs to be dealt in next iteration
+        # Mistakes Made:
+            # Interchanged the n,m
+            # Rating 4.5/5
+    def solve(self, matrix: List[List[int]]) -> List[int]:
+        # m = No of rows, n = No of cols
+        m, n = len(matrix), len(matrix[0])
+        res = []
+        top, bottom = 0, m-1
+        left, right = 0, n-1
+
+        while top <= bottom and left <= right:
+            # Traverse from LEFT -> RIGHT
+            # ROW and TOP fixed
+            for col in range(left, right+1):
+                res.append(matrix[top][col])
+            top += 1
+
+            # Traverse from TOP to BOTTOM
+            # COL and RIGHT fixed
+            for row in range(top, bottom+1):
+                res.append(matrix[row][right])
+            right -= 1
+
+            # Traverse from RIGHT to LEFT
+            # ROW and BOTTOM fixed
+            if top <= bottom:
+                for col in range(right, left-1, -1):
+                    res.append(matrix[bottom][col])
+                bottom -= 1
+
+            # Traverse from BOTTOM to TOP
+            # COL and LEFT fixed
+            if left <= right:
+                for row in range(bottom, top-1, -1):
+                    res.append(matrix[row][left])
+                left += 1
+
+        return res
     
 o = Solution()
-matrix = [[1,2,3],[4,5,6],[7,8,9]]
-# matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+# matrix = [[1,2,3],[4,5,6],[7,8,9]]
+matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
 print(o.spiralOrder(matrix))
