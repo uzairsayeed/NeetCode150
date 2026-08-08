@@ -68,6 +68,28 @@ class Solution:
         for row in range(m):
             matrix[row].reverse()
 
+    # Day-7: 08/Aug/2026
+        # Recognition Pattern: Transpose
+        # Pattern: Matrix
+        # Intuition:
+            # Transpose the matrix then reverse each row
+        # Mistakes Made:
+            # None
+            # Rating: 5/5
+    def solve(self, matrix: List[List[int]]) -> List[List[int]]:
+        n, m = len(matrix), len(matrix[0])
+        # Transpose the given matrix
+        # Change rows to cols and cols to rows
+        for row in range(n):
+            for col in range(row, m):
+                matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
+
+        # Reverse each row
+        for row in range(n):
+            matrix[row].reverse()
+
+        return matrix
+
 o = Solution()
 matrix = [[1,2,3],[4,5,6],[7,8,9]]
 print(o.rotate(matrix))
