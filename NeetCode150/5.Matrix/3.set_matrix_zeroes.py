@@ -104,7 +104,35 @@ class Solution:
                     matrix[row][col] = 0
 
         return matrix
-    
+
+
+    # Day-7: 08/Aug/2026
+        # Recognition Pattern: Use sets one for rows other for cols to track zeroed rows and cols
+        # Pattern: Set Membership
+        # Intuition:
+            # Traverse through the matrix and if any element is zero
+            # Mark that particular row and col as zero
+            # Traverse again throught he amtrix and if for curr element
+            # Either row or col is zeroed then mark that element as zero
+        # Mistakes Made:
+            # None
+            # Rating: 5/5
+    def solve(self, matrix: List[int]) -> List[int]:
+        m, n = len(matrix), len(matrix[0])
+        zeroed_rows = set()
+        zeroed_cols = set()
+
+        for row in range(m):
+            for col in range(n):
+                if matrix[row][col] == 0:
+                    zeroed_rows.add(row)
+                    zeroed_cols.add(col)
+
+        for row in range(m):
+            for col in range(n):
+                if row in zeroed_rows or col in zeroed_cols:
+                    matrix[row][col] = 0
+        return matrix
 o = Solution()
 # matrix = [[1,1,1],[1,0,1],[1,1,1]]
 matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
