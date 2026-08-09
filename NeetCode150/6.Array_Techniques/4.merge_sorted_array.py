@@ -134,7 +134,7 @@ class Solution:
                 # In this case, we'll just add the left over elements of arr2 to arr1
             # P2: arr2 is exhausted but arr1 is not exhausted => i !=-1
                 # In this case we need not to do anythng as the arr1 willalready be sorted by that time
-    # TC = O(n), SC = O(1)
+    # TC = O(m+n), SC = O(1)
     # Mistakes Made:
         # None
         # Rating: 5/5
