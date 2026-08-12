@@ -107,7 +107,6 @@ class Solution:
         
     
 o = Solution()
-# s = "()[]{}"
 s = "]"
 
 print(o.isValid(s))
