@@ -126,7 +126,6 @@ class Solution:
         return candidate
     
 o = Solution()
-# nums = [3,2,3]
 nums = [2,2,1,1,1,2,2]
 # nums = [6,5,5]
 print(o.majorityElement(nums))
