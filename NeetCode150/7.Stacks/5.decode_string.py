@@ -135,9 +135,61 @@ class Solution:
 
         return "".join(stack)
 
+
+    # Day-7: 14/Aug/2026
+    # Recognition Pattern: Pattern Matching
+    # Pattern: Stack
+    # Intuition:
+        # Push waiting elements => waiting elements : [, digits and alphabets
+        # If ']' is encountered
+            # Pop the alphabets => create the curr str
+            # Pop the ]
+            # Pop the digits => form the cnt numeric
+            # Create the str * cnt => insert back to the stack
+    # TC = O(n + decoded_output_size)
+    # SC = O(n + decoded_output_size)
+    # Mistakes Made:
+        # None
+        # Rating: 5/5
+    def solve(self, s: str) -> str:
+        char_stack = []
+
+        for char in s:
+            # When to POP ?
+            # If char is "]" , it answers the elements in waiting
+            if char == ']':
+                curr_str_arr = []
+                # First, get the chars for the str
+                while char_stack and char_stack[-1] != '[':
+                    curr_str_arr.append(char_stack.pop())
+
+                # Pop '['
+                char_stack.pop()
+
+                # Form, the number
+                curr_char_cnt_arr = []
+                while char_stack and char_stack[-1].isdigit():
+                    curr_char_cnt_arr.append(char_stack.pop())
+
+
+                curr_char_cnt_arr.reverse()
+                curr_char_cnt = int(''.join(curr_char_cnt_arr))
+
+                curr_str_arr.reverse()
+                curr_str = ''.join(curr_str_arr)
+                char_stack.append(curr_str * curr_char_cnt)
+
+            else:
+                # What to INSERT ?
+                # The below are the elements in waiting in stack
+                # Digits, Alphabets and [ 
+                char_stack.append(char)
+
+        return ''.join(char_stack)
+
 o = Solution()
 # s = "3[z]2[bc]"
 # s = "3[a2[c]]"
-# s = "2[abc]3[cd]ef"
-s = "100[leetcode]"
+s = "2[abc]3[cd]ef"
+# s = "100[leetcode]"
 print(o.decodeString(s))
