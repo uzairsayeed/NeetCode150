@@ -115,6 +115,33 @@ class Solution:
 
         return result
 
+    # Day-7: 13/Aug/2026
+    # Recognition Pattern: For every eloement find trhe next greater element
+    # Pattern: Stack
+    # Intuition:
+        # It is same as finding next greater elemetn, the only catch is the circular array part
+        # That can be handled if we traverse from 0 -> 2n instead of n
+        # At every idx of the traversal, we'll calculate curr_idx 
+            # curr_idx = idx if idx < n else idx%n
+        # Then the same logic opf next greater element is to be applied.
+    # TC = O(n), SC = O(n)
+    # Mistakes Made:
+        # None
+        # rating: 5/5
+    def solve(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        stack = []
+        res = [-1] * n
+
+        for idx in range(2*n):
+            curr_idx = idx%n
+            while stack and nums[stack[-1]] < nums[curr_idx]:
+                res[stack.pop()] = nums[curr_idx]
+
+            if idx < n:
+                stack.append(curr_idx)
+
+        return res
 o = Solution()
 nums = [1,2,1]
 # nums = [1,2,3,4,3]
