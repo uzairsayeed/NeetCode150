@@ -106,6 +106,87 @@ class Solution:
         return fleet_cnt
 
 
+
+    # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CLEANER VERSION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # Day-0: 05/Aug/2026
+    # Recognition Trigger:
+        # Cars cannot pass each other, and we need to determine which cars
+        # catch the fleet immediately ahead before reaching the target.
+    # Pattern:
+        # Sorting + Monotonic Stack
+    # Intuition:
+        # Calculate how long every car would take to reach the target alone.
+        # Process cars from closest to the target to farthest.
+        #
+        # If the current car's arrival time is <= the fleet ahead's time,
+        # it catches that fleet and merges with it.
+        #
+        # If its arrival time is greater, it cannot catch the fleet ahead
+        # and therefore forms a new fleet.
+    # TC = O(n log n)
+    # SC = O(n)
+
+    def carFleet(
+        self,
+        target: int,
+        position: List[int],
+        speed: List[int]
+    ) -> int:
+        cars = sorted(zip(position, speed), reverse=True)
+        fleet_times = []
+
+        for car_position, car_speed in cars:
+            arrival_time = (target - car_position) / car_speed
+
+            if not fleet_times or arrival_time > fleet_times[-1]:
+                fleet_times.append(arrival_time)
+
+        return len(fleet_times)
+
+
+    # Day-07: 15/Aug/2026
+    # Recognition Pattern: Simulation
+    # Pattern: Stack + sorted(zip(a1, a2))
+    # Intuition:
+        # Let us first understand what deos a car fleet means:
+            # Car Fleet: single car or a group of cars driving next to each other. 
+                # The speed of the car fleet is the minimum speed of any car in the fleet.
+        # IMPORTANT POINT: A car cannot pass another car, but it can catch up and then travel next to it at the speed of the slower car.
+            # Which means, if there are 2 cars A and B, where position(A) > position(B) wrt to TARGET [B is closer to TARGET than A]
+            # then, even if the speed(A) >> speed(B), car A wont pass car B
+            # instead, it will travel next to car B and form a single fleet whose speed == speed(B) [SInce car B is slower]
+        # Therefore, we must process cars by their position, starting with the car closest to the target and moving backward.
+        # Now the problem narrows down to:
+            # How long will each car take to reach the target if it travels alone?
+                # For a car at position[i] with speed[i]:
+                # arrival_time = (target - position[i]) / speed[i]
+            # As we are processing from positions closer to target,
+            # We caclculate the arrival_times in the same roder
+            # If the incoming arrival_time > the curr arrival_time (arrival_time at the top of stack)
+                # It cannot be part of the current fleet so we insert it into the stack
+            # If the incoming arrival_time < the curr arrival_time (arrival_time at the top of stack)
+                # Then we can merge the curr car into the top fleet 
+                # While merging, the fleet effectively moves at the slower car’s speed, so the fleet arrival time remains the larger arrival time.
+    # TC = O(nlogn), SC = O(n)
+    # Mistakes Made:
+        # None
+        # Rating: 5/5
+    def solve(self, target: int, position: List[int], speed: List[int]) -> int:
+        fleets = []
+        cars = sorted(zip(position, speed), reverse=True)
+
+        for pos,speed in cars:
+            arrival_time = (target - pos)/speed
+
+            # Insertion to the stack happens only in 2 scenarios
+                # S1: If the stack is empty , that means the 1st car is under processing
+                # S2: When the arrival_time > fleets[-1] condition is satisfied.
+            if not fleets or arrival_time > fleets[-1]:
+                fleets.append(arrival_time)
+
+        return len(fleets)
+
+    
 o = Solution()
 # target = 12
 # position = [10,8,0,5,3]
