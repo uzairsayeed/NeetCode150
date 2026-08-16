@@ -67,20 +67,84 @@ class Solution:
         # NOw for every element of the stack we figure out the LEFT boundary 
         # And we then calculate the area
         while stack:
-            right_boundary = len(heights)
-
             popped_idx = stack.pop()
-            left_boundary = stack[-1] if stack else -1
-
-            curr_width = right_boundary - left_boundary - 1
             curr_height = heights[popped_idx]
+
+            right_boundary = len(heights)
+            left_boundary = stack[-1] if stack else -1
+            curr_width = right_boundary - left_boundary - 1
+
             curr_area = curr_height * curr_width
 
             max_area = max(max_area, curr_area)
 
         return max_area
 
+    # Day-07: 15/Aug/2026
+    # Recognition Pattern: Every bar in the stack is waiting for its first smaller bar on the right.
+    # Pattern: Stack (Monotonic)
+    # Intuition:
+        # Given bars of certtains heights and width=1
+        # We need to find the max area of the rectangle
+            # A rectangle is formed by 2 bars
+        # We can use STACK to push the bars
+        # Now for each bar who is currently the top of STACK, we can consider its next bar in the stack to be the exclusive LEFT boundary of the rectangle
+        # NOw the task is to find a suitable exclusive RIGHT boundary.
+        # Now for the curr top bar there are 2 options with which it can form a rectangle
+            # O1: If the incoming bar height > height[stack[-1]]
+                # the current top bar can still extend through this incoming bar, 
+                # so its right boundary is still unknown  
+                # just push the incoming bar.
+            # O2: If the incoming bar height < height[stack[-1]]
+                # It means for the current exclusive LEFT boundary we've found the exsclusive RIGHT boundary
+                # Since the curr bar height is > the incoming bar , curr bar cant merge any further
+                # So calculate curr_area and compute max_area
+                    # curr_idx -> exclusive right boundary
+                    # new stack top after pop -> exclusive left boundary
+                    # width = right - left - 1
+            # Bars remaining after traversal never found a smaller bar on the right,
+            # so use len(heights) as their exclusive right boundary.        
+        # TC = O(n), SC = O(n)
+        # Mistakes Made:
+            # The core intuition clicked this time, but the mental model was not correct
+            # Eventually looked at prev notes and implementaion to get through
+            # Last rating was 2.5/5, but this tiome i would rate 3/5 since the core intuition clicked right through
+    def solve(self, heights: List[int]) -> int:
+        bars = []
+        max_area = float('-inf')
 
+        for idx,height in enumerate(heights):
+            # Current top bar encountered a smaller bar
+            while bars and height < heights[bars[-1]]:
+                popped_idx = bars.pop()
+                curr_height = heights[popped_idx]
+
+                right_boundary = idx
+                left_boundary = bars[-1] if bars else -1
+                curr_width = right_boundary - left_boundary - 1
+
+                curr_area = curr_height * curr_width
+
+                max_area = max(max_area, curr_area)
+            
+            bars.append(idx)
+
+        # This is to handle the case, where the elements in the stack didnt encountered any smaller elemetrns to its right
+        right_boundary = len(heights)
+        while bars:
+            popped_idx = bars.pop()
+            curr_height = heights[popped_idx]
+
+            left_boundary = bars[-1] if bars else -1
+            curr_width = right_boundary - left_boundary - 1
+
+            curr_area = curr_height * curr_width
+
+            max_area = max(max_area, curr_area)
+
+        return max_area
+
+    
 o = Solution()
 # heights = [2,1,5,6,2,3]
 heights = [7,1,7,2,2,4]
