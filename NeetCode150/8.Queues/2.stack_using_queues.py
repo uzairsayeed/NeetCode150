@@ -99,7 +99,61 @@ class MyStack:
 
     def empty(self) -> bool:
         return not self.q1
+
+
+class MyStack1:
+    # Day-01: 17/Aug/2026
+    # Recognition Pattern: q1 always contains the current stack elements in insertion order; q2 is just temporary storage used during pop.
+    # Pattern: Two Queues
+    # Intuition:
+        # push(x)
+            # → append to q1
+        # pop()
+            #  -> rotate the first n-1 elements from front to back
+            #  -> the newest element is now at the front
+            #  -> remove it
+        # top()
+            # → similar idea, but preserve the last element instead of permanently removing it
+        # empty()
+            # → q1 is empty
+    # TC:
+        # push  -> O(1)
+        # pop   -> O(n)
+        # top   -> O(n)
+        # empty -> O(1)
+    # SC = O(n)
+    # Mistakes MAde:
+        # Received the hint for this approach
+        # Rating: 3/5
+    def __init__(self):
+        self.q1 = deque()
+
+    def push(self, x: int) -> None:
+        self.q1.append(x)
+
+    def pop(self) -> int:
+        pop_cnt = len(self.q1)
+
+        while pop_cnt != 1:
+            self.q1.append(self.q1.popleft())
+            pop_cnt -= 1
+
+        return self.q1.popleft()
+
+    def top(self) -> int:
+        pop_cnt = len(self.q1)
         
+        while pop_cnt != 1:
+            self.q1.append(self.q1.popleft())
+            pop_cnt -= 1
+
+        top_element = self.q1.popleft()
+        self.q1.append(top_element)
+
+        return top_element
+
+    def empty(self) -> bool:
+            return not self.q1
 
 
 # Your MyStack object will be instantiated and called as such:
