@@ -44,3 +44,10 @@ class MovingAverage:
             self.curr_sum -= popped_element
 
         return self.curr_sum/len(self.q1)
+
+
+o = MovingAverage(3)
+o.next(1)
+o.next(10)
+o.next(3)
+o.next(5)
